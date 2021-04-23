@@ -19,14 +19,12 @@ const ChampionList = () => {
         fetch(apiUrl)
             .then((response) => response.json())
             .then((champions) => {
-                console.log(champions);
                 setChampions({ champions: champions })
                 setIsLoading(false);
             })
     }, [setChampions])
 
     const championSelectedHandler = (id) => {
-        console.log(id)
         setOpen(true)
         setSelectedChampionId(id)
     }
@@ -50,7 +48,7 @@ const ChampionList = () => {
     return (
         <>
             <Modal open={open} onClose={handleClose}>
-                <ChampionDetails id={selectedChampionId} name={champions.name} />
+                <ChampionDetails id={selectedChampionId} />
             </Modal>
             {!isLoading && championsList}
             {isLoading && <div className="spinner">

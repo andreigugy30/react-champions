@@ -25,7 +25,6 @@ const ChampionDetails = (props) => {
                 fetch(apiUrl)
                     .then((response) => response.json())
                     .then((champion) => {
-                        console.log(champion);
                         setLoadedChampionDetails(champion)
                     })
             }
