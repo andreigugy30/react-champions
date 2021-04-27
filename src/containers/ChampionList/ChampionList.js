@@ -5,6 +5,7 @@ import ChampionDetails from '../../components/ChampionDetails/ChampionDetails';
 import Modal from '@material-ui/core/Modal';
 import token from "../../token";
 import "../ChampionList/ChampionList.css"
+import { Container, Grid } from '@material-ui/core';
 
 const ChampionList = () => {
 
@@ -34,15 +35,18 @@ const ChampionList = () => {
     };
 
     const championsList = champions.champions !== undefined ? champions.champions.map((champion, key) => {
-
-        return <ChampionItem
-            key={champion.id}
-            name={champion.name}
-            image_url={champion.image_url}
-            armor={champion.armor}
-            attackdamage={champion.attackdamage}
-            clicked={() => championSelectedHandler(champion.id)}
-        />
+        return (
+            <Grid item xs={12} md={6} lg={4} >
+                <ChampionItem
+                    key={champion.id}
+                    name={champion.name}
+                    image_url={champion.image_url}
+                    armor={champion.armor}
+                    attackdamage={champion.attackdamage}
+                    clicked={() => championSelectedHandler(champion.id)}
+                />
+            </Grid>
+        )
     }) : null
 
     return (
@@ -50,7 +54,13 @@ const ChampionList = () => {
             <Modal open={open} onClose={handleClose}>
                 <ChampionDetails id={selectedChampionId} />
             </Modal>
-            {!isLoading && championsList}
+            {!isLoading &&
+                <Container>
+                    <Grid container spacing={2}>
+                        {championsList}
+                    </Grid>
+                </Container>
+            }
             {isLoading && <div className="spinner">
                 <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
             </div>}
