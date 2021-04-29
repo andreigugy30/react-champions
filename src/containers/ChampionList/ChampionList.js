@@ -5,7 +5,7 @@ import ChampionDetails from '../../components/ChampionDetails/ChampionDetails';
 import Modal from '@material-ui/core/Modal';
 import token from "../../token";
 import "../ChampionList/ChampionList.css"
-import { Container, Grid } from '@material-ui/core';
+import { Button, Container, Grid } from '@material-ui/core';
 
 const ChampionList = () => {
 
@@ -13,6 +13,7 @@ const ChampionList = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [selectedChampionId, setSelectedChampionId] = useState(null);
     const [open, setOpen] = useState(false);
+    const { items, requestSort, sortConfiguration } = useSortableData(champions.champions);
 
     useEffect(() => {
         const apiUrl = `https://api.pandascore.co/lol/champions?token=${token}`;
@@ -34,7 +35,7 @@ const ChampionList = () => {
         setOpen(false);
     };
 
-    const championsList = champions.champions !== undefined ? champions.champions.map((champion, key) => {
+    const championsList = items !== undefined ? items.map((champion, key) => {
         return (
             <Grid item xs={12} md={6} lg={4} >
                 <ChampionItem
@@ -55,7 +56,13 @@ const ChampionList = () => {
                 <ChampionDetails id={selectedChampionId} />
             </Modal>
             {!isLoading &&
-                <Container>
+                <Container style={{ marginTop: "20px" }}>
+                    <Button
+                        variant="contained" color="primary"
+                        onClick={() => requestSort('name')}
+                    >
+                        {sortConfiguration.direction == 'DESC' ? "ASCENDING" : "DESCENDING"}
+                    </Button>
                     <Grid container spacing={2}>
                         {championsList}
                     </Grid>
@@ -67,5 +74,40 @@ const ChampionList = () => {
         </>
     )
 }
+
+const useSortableData = (items, config = null) => {
+    const [sortConfiguration, setSortConfig] = useState(config);
+
+    const sortedItems = React.useMemo(() => {
+        let sortableItems = [...items];
+        console.log(sortConfiguration)
+        if (sortableItems !== undefined && sortConfiguration !== null) {
+            sortableItems.sort((a, b) => {
+                if (a[sortConfiguration.key] < b[sortConfiguration.key]) {
+                    return sortConfiguration.direction === 'ASC' ? -1 : 1;
+                }
+                if (a[sortConfiguration.key] > b[sortConfiguration.key]) {
+                    return sortConfiguration.direction === 'ASC' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        return sortableItems;
+    }, [items, sortConfiguration]);
+
+    const requestSort = (key) => {
+        let direction = 'ASC';
+        if (
+            sortConfiguration &&
+            sortConfiguration.key === key &&
+            sortConfiguration.direction === 'ASC'
+        ) {
+            direction = 'DESC';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    return { items: sortedItems, requestSort, sortConfiguration };
+};
 
 export default ChampionList;
