@@ -9,11 +9,11 @@ import { Button, Container, Grid } from '@material-ui/core';
 
 const ChampionList = () => {
 
-    const [champions, setChampions] = useState({ champions: [] });
+    const [champions, setChampions] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedChampionId, setSelectedChampionId] = useState(null);
     const [open, setOpen] = useState(false);
-    const { items, requestSort, sortConfiguration } = useSortableData(champions.champions);
+    const { items, requestSort, sortConfiguration } = useSortableData(champions);
 
     useEffect(() => {
         const apiUrl = `https://api.pandascore.co/lol/champions?token=${token}`;
@@ -21,7 +21,7 @@ const ChampionList = () => {
         fetch(apiUrl)
             .then((response) => response.json())
             .then((champions) => {
-                setChampions({ champions: champions })
+                setChampions(champions)
                 setIsLoading(false);
             })
     }, [setChampions])
@@ -37,9 +37,8 @@ const ChampionList = () => {
 
     const championsList = items !== undefined ? items.map((champion, key) => {
         return (
-            <Grid item xs={12} md={6} lg={4} >
+            <Grid item xs={12} md={6} lg={4} key={key}>
                 <ChampionItem
-                    key={champion.id}
                     name={champion.name}
                     image_url={champion.image_url}
                     armor={champion.armor}
@@ -61,7 +60,7 @@ const ChampionList = () => {
                         variant="contained" color="primary"
                         onClick={() => requestSort('name')}
                     >
-                        {sortConfiguration.direction == 'DESC' ? "ASCENDING" : "DESCENDING"}
+                        {sortConfiguration?.direction == 'DESC' ? "ASCENDING" : "DESCENDING"}
                     </Button>
                     <Grid container spacing={2}>
                         {championsList}
