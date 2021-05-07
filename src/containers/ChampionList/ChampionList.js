@@ -60,7 +60,7 @@ const ChampionList = () => {
                         variant="contained" color="primary"
                         onClick={() => requestSort('name')}
                     >
-                        {sortConfiguration?.direction == 'DESC' ? "ASCENDING" : "DESCENDING"}
+                        {sortConfiguration?.direction === 'DESC' ? "ASCENDING" : "DESCENDING"}
                     </Button>
                     <Grid container spacing={2}>
                         {championsList}
@@ -79,7 +79,6 @@ const useSortableData = (items, config = null) => {
 
     const sortedItems = React.useMemo(() => {
         let sortableItems = [...items];
-        console.log(sortConfiguration)
         if (sortableItems !== undefined && sortConfiguration !== null) {
             sortableItems.sort((a, b) => {
                 if (a[sortConfiguration.key] < b[sortConfiguration.key]) {
