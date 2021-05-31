@@ -1,0 +1,7 @@
+.modal {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 33%;
+  left: 50%;
+}
